@@ -214,6 +214,21 @@
             max-width: 1080px;
             margin: 0 auto;
             padding: 110px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        section .row,
+        section.trust > * { position: relative; z-index: 1; }
+
+        /* Decorative brand "cap" mark, floated behind each section at a
+           different size and position so the motif recurs without repeating. */
+        .deco-mark {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.05;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
         }
         .row {
             display: grid;
@@ -258,11 +273,15 @@
             background: white;
             border-top: 1px solid var(--line);
             border-bottom: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
         }
         .how-inner {
             max-width: 1080px;
             margin: 0 auto;
             padding: 90px 24px;
+            position: relative;
+            z-index: 1;
         }
         .how .kicker { text-align: center; }
         .how h2 { text-align: center; margin-bottom: 56px; }
@@ -295,6 +314,8 @@
             background: var(--bg);
             text-align: center;
             padding: 80px 24px;
+            position: relative;
+            overflow: hidden;
         }
         .stats .grid {
             max-width: 900px;
@@ -302,6 +323,8 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 32px;
+            position: relative;
+            z-index: 1;
         }
         .stat .num { font-size: 40px; font-weight: 700; color: var(--primary); letter-spacing: -1px; }
         .stat .label { font-size: 15px; color: var(--muted); margin-top: 4px; }
@@ -312,11 +335,100 @@
             color: white;
             text-align: center;
             padding: 100px 24px;
+            position: relative;
+            overflow: hidden;
         }
+        .darkmode > * { position: relative; z-index: 1; }
         .darkmode .kicker { color: var(--primary-dim); }
         .darkmode h2 { color: white; }
         .darkmode p { color: #9aa3b2; max-width: 520px; margin: 0 auto 48px; font-size: 17px; }
         .darkmode .phone { box-shadow: 0 30px 80px -20px rgba(0,87,255,0.4); }
+
+        /* Badge collection */
+        .collection {
+            background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+        }
+        .collection-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 104px 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .collection .kicker { text-align: center; }
+        .collection h2 { max-width: 18ch; margin: 0 auto 18px; }
+        .collection-lede {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--ink-soft);
+            max-width: 600px;
+            margin: 0 auto 56px;
+        }
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            text-align: left;
+        }
+        .badge-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 30px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            box-shadow: 0 1px 2px rgba(20,40,90,0.04), 0 18px 40px -28px rgba(20,40,120,0.35);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .badge-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 1px 2px rgba(20,40,90,0.05), 0 26px 52px -28px rgba(20,40,120,0.45);
+        }
+        .medallion {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow:
+                inset 0 1px 1px rgba(255,255,255,0.6),
+                inset 0 -3px 7px rgba(0,0,0,0.14),
+                0 10px 22px -10px rgba(20,40,120,0.5);
+        }
+        .medallion::after {
+            content: "";
+            position: absolute;
+            inset: 5px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            pointer-events: none;
+        }
+        .medallion svg {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.28));
+        }
+        .medallion--blue   { background: linear-gradient(145deg, #5b85ff, #0a43c8); }
+        .medallion--amber  { background: linear-gradient(145deg, #ffd27a, #f0972f); }
+        .medallion--teal   { background: linear-gradient(145deg, #5fd6b4, #11a07c); }
+        .medallion--sky    { background: linear-gradient(145deg, #7cc6ff, #1f86e0); }
+        .medallion--violet { background: linear-gradient(145deg, #a895ff, #5b3fd6); }
+        .medallion--gold   { background: linear-gradient(145deg, #ffe08a, #dca018); }
+        .badge-card h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; margin-bottom: 7px; }
+        .badge-card p { font-size: 14.5px; color: var(--muted); line-height: 1.55; }
+        .collection-foot { font-size: 15px; color: var(--muted); max-width: 580px; margin: 54px auto 0; }
 
         /* Trust line */
         .trust {
@@ -359,9 +471,17 @@
             .features { grid-template-columns: 1fr; gap: 32px; }
             .stats .grid { grid-template-columns: 1fr; gap: 28px; }
             .how-inner { padding: 70px 24px; }
+            .collection-inner { padding: 70px 24px; }
+            .collection-lede { margin-bottom: 40px; }
+            .badge-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+            .badge-card { padding: 24px 22px; }
             .phone-pair { flex-direction: column; gap: 24px; }
             .phone-pair .phone:first-child { transform: none; }
             .phone-pair .phone:last-child  { transform: none; margin-top: 0; }
+        }
+        @media (max-width: 520px) {
+            .badge-grid { grid-template-columns: 1fr; }
+            .deco-mark { opacity: 0.035; }
         }
     </style>
 </head>
@@ -408,6 +528,7 @@
     </header>
 
     <section>
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:380px;height:380px;right:-100px;bottom:-120px;transform:rotate(9deg);opacity:0.05;"><use href="#wp-mark"/></svg>
         <div class="row">
             <div class="copy">
                 <span class="kicker">Start anywhere</span>
@@ -425,11 +546,12 @@
     </section>
 
     <section style="padding-top: 0;">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:300px;height:300px;left:-80px;top:10px;transform:rotate(-12deg);opacity:0.045;"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Focus mode</span>
                 <h2>Sharp questions, zero clutter.</h2>
-                <p>One question at a time, a calm progress bar, and a clean way to skip and come back. WisePath is built for thinking — not for badges, streaks-for-the-sake-of-it, or noisy game mechanics.</p>
+                <p>One question at a time, a calm progress bar, and a clean way to skip and come back. WisePath is built for thinking first — no noisy game mechanics in your way, just you and the question.</p>
                 <p>When you finish, you get a clear score, the proficiency points you earned, and an honest read on the level you're at.</p>
                 <p class="muted">Retake any assessment, or spin up a fresh one on a related angle in a tap.</p>
             </div>
@@ -447,6 +569,7 @@
     </section>
 
     <div class="how">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:440px;height:440px;right:-130px;top:-90px;transform:rotate(14deg);opacity:0.04;"><use href="#wp-mark"/></svg>
         <div class="how-inner">
             <span class="kicker">How it works</span>
             <h2>Three steps to mastery</h2>
@@ -471,6 +594,7 @@
     </div>
 
     <section style="padding-bottom: 0;">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:320px;height:320px;left:-90px;bottom:-70px;transform:rotate(-7deg);opacity:0.05;"><use href="#wp-mark"/></svg>
         <div class="row">
             <div class="copy">
                 <span class="kicker">Insights</span>
@@ -487,11 +611,12 @@
     </section>
 
     <section>
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:400px;height:400px;right:-120px;top:-90px;transform:rotate(11deg);opacity:0.045;"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Your growth</span>
                 <h2>Progress you can see add up.</h2>
-                <p>Proficiency points, mastery percentages, and badges chart your journey from "just started" to genuinely strong — across every topic you take on.</p>
+                <p>Proficiency points and mastery percentages chart your journey from "just started" to genuinely strong — across every topic you take on.</p>
                 <p>A gentle line that climbs over time, not a slot machine. Real understanding, measured honestly.</p>
                 <p class="muted">Keep a daily streak going and let your average score tell the long story.</p>
             </div>
@@ -503,7 +628,62 @@
         </div>
     </section>
 
+    <div class="collection">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:520px;height:520px;left:50%;margin-left:-260px;top:-150px;transform:rotate(-5deg);opacity:0.04;"><use href="#wp-mark"/></svg>
+        <div class="collection-inner">
+            <span class="kicker">Your collection</span>
+            <h2>Collect badges as your knowledge grows.</h2>
+            <p class="collection-lede">Every milestone becomes something you can see and keep. Badges turn quiet progress — a finished assessment, a steadier streak, a new level reached — into a growing collection that mirrors your understanding. Discovery, progress, and reward, made visible.</p>
+            <div class="badge-grid">
+                <div class="badge-card">
+                    <div class="medallion medallion--blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 21V4"/><path d="M5.5 4h10l-1.6 3.5L15.5 11h-10z"/></svg>
+                    </div>
+                    <h3>First Steps</h3>
+                    <p>Finish your first assessment and open your collection. Every path starts with one.</p>
+                </div>
+                <div class="badge-card">
+                    <div class="medallion medallion--amber">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.6 2.7 2.5 3.8 3.7 5.5 1 1.4 1.8 2.9 1.8 4.7a5.5 5.5 0 0 1-11 0c0-1.4.4-2.5 1.1-3.4.2 1.1.9 1.9 1.9 2.2-.4-2 .3-3.9 1.6-5.3.6-.7 1.1-1.6.9-3.7z"/></svg>
+                    </div>
+                    <h3>Streak Keeper</h3>
+                    <p>Show up day after day. Consistency earns a mark all its own.</p>
+                </div>
+                <div class="badge-card">
+                    <div class="medallion medallion--teal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg>
+                    </div>
+                    <h3>Topic Explorer</h3>
+                    <p>Venture into new subjects and widen the map of what you know.</p>
+                </div>
+                <div class="badge-card">
+                    <div class="medallion medallion--sky">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>
+                    </div>
+                    <h3>Sharp Mind</h3>
+                    <p>String together high-accuracy runs on the questions that count most.</p>
+                </div>
+                <div class="badge-card">
+                    <div class="medallion medallion--violet">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg>
+                    </div>
+                    <h3>Level Up</h3>
+                    <p>Cross a new proficiency threshold and watch your level climb.</p>
+                </div>
+                <div class="badge-card">
+                    <div class="medallion medallion--gold">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.8 8.2l3.4 2.3L12 5l3.8 5.5 3.4-2.3-1.3 9.3a1 1 0 0 1-1 .9H7.1a1 1 0 0 1-1-.9z"/></svg>
+                    </div>
+                    <h3>Mastery</h3>
+                    <p>Reach genuine command of a topic — the badge you keep for good.</p>
+                </div>
+            </div>
+            <p class="collection-foot">No grinding, no gimmicks. Just honest recognition for showing up, going deeper, and getting measurably better — milestone by milestone.</p>
+        </div>
+    </div>
+
     <div class="stats">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:340px;height:340px;left:-90px;top:-70px;transform:rotate(8deg);opacity:0.045;"><use href="#wp-mark"/></svg>
         <div class="grid">
             <div class="stat">
                 <div class="num">Any topic</div>
@@ -521,6 +701,7 @@
     </div>
 
     <div class="darkmode">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:190px;height:190px;right:-30px;bottom:-25px;transform:rotate(-10deg);color:#3a59c9;opacity:0.12;"><use href="#wp-mark"/></svg>
         <span class="kicker">Day or night</span>
         <h2>Beautiful in the dark, too.</h2>
         <p>A focused, native iOS experience with a true dark mode for late-night study sessions and early-morning reps.</p>
@@ -530,6 +711,7 @@
     </div>
 
     <section class="trust">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:240px;height:240px;right:-70px;top:-60px;transform:rotate(-9deg);opacity:0.04;"><use href="#wp-mark"/></svg>
         <h3>Built thoughtfully, with your privacy in mind.</h3>
         <p>Your assessments and progress are stored on your device. Sign in with Apple keeps your identity private — WisePath never needs your email. We don't sell your data or run ad trackers. <a href="privacy.html">Read the privacy policy →</a></p>
     </section>
