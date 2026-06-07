@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WisePath — Learn anything. Prove it.</title>
-    <meta name="description" content="WisePath turns any topic into a personalized, AI-built assessment. Pick something you want to master, take a sharp little quiz, and watch your proficiency grow.">
+    <title>WisePath — Learn anything. Take the wise path.</title>
+    <meta name="description" content="WisePath turns any topic into a personalized, AI-built assessment. Pick something you want to understand, take a sharp little quiz, and watch your proficiency grow along the way.">
     <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
     <link rel="apple-touch-icon" href="images/favicon-192.png">
-    <meta property="og:title" content="WisePath — Learn anything. Prove it.">
-    <meta property="og:description" content="Turn any topic into a personalized, AI-built assessment. Take a sharp little quiz and watch your proficiency grow.">
+    <meta property="og:title" content="WisePath — Learn anything. Take the wise path.">
+    <meta property="og:description" content="Turn any topic into a personalized, AI-built assessment. Take a sharp little quiz and watch your proficiency grow, one step at a time.">
     <meta property="og:image" content="https://nimomix.github.io/wisepath-website/images/logo.png">
     <meta property="og:url" content="https://nimomix.github.io/wisepath-website/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="WisePath — Learn anything. Prove it.">
-    <meta name="twitter:description" content="Turn any topic into a personalized, AI-built assessment and watch your proficiency grow.">
+    <meta name="twitter:title" content="WisePath — Learn anything. Take the wise path.">
+    <meta name="twitter:description" content="Turn any topic into a personalized, AI-built assessment and watch your proficiency grow, one step at a time.">
     <meta name="twitter:image" content="https://nimomix.github.io/wisepath-website/images/logo.png">
     <meta name="theme-color" content="#0043c8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,6 +42,7 @@
             background: var(--bg);
             line-height: 1.55;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
         a { color: var(--primary); }
 
@@ -133,21 +134,43 @@
             font-family: var(--display);
             font-optical-sizing: auto;
             font-size: clamp(42px, 6.4vw, 68px);
-            line-height: 1.03;
+            line-height: 1.04;
             font-weight: 500;
             letter-spacing: -0.8px;
-            margin-bottom: 24px;
+            margin-bottom: 26px;
             text-wrap: balance;
             text-shadow: 0 2px 34px rgba(110,150,255,0.22);
         }
+        /* First line: strong, confident statement */
+        .hero h1 .line-1 {
+            display: block;
+        }
+        /* Second line: softer, lighter, editorial — supportive, not competitive */
         .hero h1 em {
+            display: inline-block;
+            margin-top: 6px;
             font-style: italic;
-            font-weight: 500;
+            font-weight: 400;
+            font-size: 0.9em;
+            letter-spacing: -0.4px;
             color: #c3d2ff;
-            background: linear-gradient(92deg, #e1e8ff 0%, #9fb6ff 100%);
+            background: linear-gradient(92deg, #e7ecff 0%, #a7bcff 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+        /* Subtle path flourish underlining the journey line */
+        .hero h1 em::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            bottom: -0.16em;
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, rgba(167,188,255,0) 0%, rgba(167,188,255,0.85) 22%, rgba(231,236,255,0.95) 60%, rgba(167,188,255,0) 100%);
+            opacity: 0.8;
         }
         .hero .lede {
             font-size: 18px;
@@ -453,8 +476,221 @@
         .footer a:hover { text-decoration: underline; }
         .nav { display: flex; gap: 24px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
 
+        /* ===================================================================
+           Premium atmosphere, journey path & motion  (wisepath-web-005)
+           Brings the whole site closer to the hero's depth & personality.
+           =================================================================== */
+
+        /* Soft global atmosphere field — shows through transparent sections so
+           the page reads as one continuous space rather than stacked boxes. */
+        body {
+            background:
+                radial-gradient(1100px 720px at 88% -2%, rgba(0,87,255,0.07), transparent 60%),
+                radial-gradient(900px 760px at 3% 30%, rgba(0,67,200,0.055), transparent 58%),
+                radial-gradient(1000px 760px at 99% 63%, rgba(0,87,255,0.06), transparent 60%),
+                radial-gradient(820px 680px at 10% 93%, rgba(0,67,200,0.05), transparent 58%),
+                var(--bg);
+            background-attachment: fixed;
+        }
+
+        /* Flow wrapper holds the journey line behind all the content sections */
+        .flow { position: relative; z-index: 0; }
+        .flow > section,
+        .flow > .how,
+        .flow > .stats,
+        .flow > .darkmode { position: relative; z-index: 1; }
+
+        .journey {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: visible;
+        }
+        .journey path { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+        .journey-base {
+            stroke: rgba(0,67,200,0.18);
+            stroke-width: 2;
+            stroke-dasharray: 2 11;     /* stepping-stones trail */
+        }
+        .journey-trail {
+            stroke: url(#journey-grad);
+            stroke-width: 2.6;
+            filter: drop-shadow(0 0 6px rgba(0,87,255,0.45));
+        }
+
+        /* Milestone nodes light up as the journey reaches them on scroll */
+        .journey-node {
+            position: absolute;
+            width: 12px; height: 12px;
+            margin: -6px 0 0 -6px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 40%, #f0f4ff, var(--primary-dim));
+            box-shadow: 0 0 0 4px rgba(0,87,255,0.07);
+            opacity: 0.4;
+            transform: scale(0.62);
+            transition: opacity .55s ease, transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .55s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .journey-node.lit {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 0 0 5px rgba(0,87,255,0.12), 0 0 20px 2px rgba(0,87,255,0.5);
+        }
+
+        /* Faint brand silhouettes give each section its own atmosphere */
+        .section-mark {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+            filter: drop-shadow(0 18px 40px rgba(0,67,200,0.25));
+        }
+
+        /* Reveal-on-scroll — content rises gently into place */
+        .reveal {
+            opacity: 0;
+            transform: translateY(26px);
+            transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+            will-change: opacity, transform;
+        }
+        .reveal.in { opacity: 1; transform: none; }
+
+        /* Phones gain depth & lift on hover */
+        .phone {
+            transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s cubic-bezier(.2,.8,.2,1);
+        }
+        .visual .phone:hover {
+            transform: translateY(-8px);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.06) inset,
+                0 46px 80px -28px rgba(0,30,120,0.5),
+                0 26px 54px -24px rgba(0,87,255,0.42);
+        }
+        .phone-pair .phone:first-child:hover { transform: rotate(-2deg) translateY(-10px); }
+        .phone-pair .phone:last-child:hover  { transform: rotate(2deg) translateY(-10px); }
+        .darkmode .phone:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 40px 90px -20px rgba(0,87,255,0.55);
+        }
+
+        /* Section kickers carry a small leading spark from the path */
+        .kicker { position: relative; }
+
+        /* How-it-works — its own soft-lit band, cards become stepping stones */
+        .how {
+            background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+            overflow: hidden;
+        }
+        .how::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(700px 360px at 50% -12%, rgba(0,87,255,0.07), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .how-inner { position: relative; z-index: 1; }
+        .features { position: relative; }
+        /* dashed connector linking the three steps — visible in the gaps */
+        .features::before {
+            content: "";
+            position: absolute;
+            top: 58px;
+            left: 8%;
+            right: 8%;
+            border-top: 2px dashed rgba(0,87,255,0.26);
+            z-index: 0;
+        }
+        .feature {
+            position: relative;
+            z-index: 1;
+            padding: 30px 22px 28px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, #ffffff, #f6f9ff);
+            border: 1px solid var(--line);
+            box-shadow: 0 1px 2px rgba(20,40,120,0.04), 0 20px 44px -32px rgba(20,40,120,0.3);
+            transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease, border-color .45s ease;
+        }
+        .feature:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0,87,255,0.28);
+            box-shadow: 0 1px 2px rgba(20,40,120,0.05), 0 32px 60px -28px rgba(0,67,200,0.4);
+        }
+        .feature .dot {
+            box-shadow: 0 10px 24px -10px rgba(0,87,255,0.55);
+            transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease;
+        }
+        .feature:hover .dot {
+            transform: translateY(-3px) scale(1.06);
+            box-shadow: 0 16px 32px -10px rgba(0,87,255,0.65);
+        }
+
+        /* Stats — numbers gently lift and brighten */
+        .stats { overflow: hidden; }
+        .stat {
+            padding: 18px 14px;
+            border-radius: 18px;
+            transition: transform .4s cubic-bezier(.2,.8,.2,1);
+        }
+        .stat:hover { transform: translateY(-5px); }
+        .stat .num {
+            background: linear-gradient(180deg, var(--primary-bright), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Dark-mode beat — echoes the hero's layered glow */
+        .darkmode {
+            background:
+                radial-gradient(ellipse at 72% 0%, rgba(0,87,255,0.22) 0%, transparent 55%),
+                radial-gradient(ellipse at 14% 100%, rgba(0,67,200,0.26) 0%, transparent 60%),
+                #0a0f1c;
+            overflow: hidden;
+        }
+        .darkmode > * { position: relative; z-index: 1; }
+
+        /* Trust line — soft halo for a calm, premium close */
+        .trust {
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(620px 280px at 50% 0%, rgba(0,87,255,0.05), transparent 70%), #ffffff;
+        }
+        .trust > * { position: relative; z-index: 1; }
+        .trust a { text-decoration: none; font-weight: 600; transition: opacity .25s ease; }
+        .trust a:hover { opacity: 0.7; }
+
+        /* App-store badge gains a subtle interactive lift */
+        .badge-soon {
+            transition: transform .4s cubic-bezier(.2,.8,.2,1), background .4s ease, border-color .4s ease;
+        }
+        .badge-soon:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.45);
+        }
+        .launch-pill::before { animation: pulse-dot 2.6s ease-in-out infinite; }
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(142,166,255,0.18); }
+            50%      { box-shadow: 0 0 0 7px rgba(142,166,255,0.06); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .launch-pill::before { animation: none; }
+            html { scroll-behavior: auto; }
+        }
+
         /* Responsive */
         @media (max-width: 800px) {
+            .features::before { display: none; }
+            .journey, .journey-node { display: none; }
+            .section-mark { display: none; }
             .hero { padding-top: 56px; }
             .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
             .brand { margin-left: auto; margin-right: auto; }
@@ -507,8 +743,8 @@
                     <span class="wordmark">WisePath</span>
                 </span>
                 <span class="launch-pill">Coming soon to the App Store</span>
-                <h1>Learn anything.<br><em>Prove it.</em></h1>
-                <p class="lede">Name any topic — World War II, Swift concurrency, the bond market — and WisePath builds you a sharp, personalized assessment on the spot. Take the quiz, see exactly what you know, and watch your proficiency climb.</p>
+                <h1><span class="line-1">Learn anything.</span><em>Take the wise path.</em></h1>
+                <p class="lede">Name any topic — World War II, Swift concurrency, the bond market — and WisePath builds you a sharp, personalized assessment on the spot. Follow a thoughtful path from curiosity to mastery, and watch your proficiency grow with every step.</p>
                 <div class="badges">
                     <span class="badge-soon" aria-label="Coming soon to the App Store">
                         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 1.6c.1 1-.3 2-.9 2.7-.7.8-1.8 1.4-2.8 1.3-.1-1 .4-2 1-2.7.7-.8 1.9-1.3 2.7-1.3zM19.6 8.5c-.6 1-1 2.1-1 3.4 0 1.5.9 2.9 2.1 3.6-.4 1-.9 2-1.6 3-.9 1.2-1.8 2.4-3.2 2.5-1.3 0-1.7-.8-3.2-.8s-2 .8-3.2.8c-1.4.1-2.5-1.3-3.4-2.5C2.5 19 1.4 14.5 3.3 11.5c.9-1.5 2.5-2.4 4.2-2.4 1.4 0 2.6.9 3.2.9.6 0 2.1-1.1 3.6-1 .6 0 2.4.3 3.3 1.5z"/></svg>
@@ -527,8 +763,21 @@
         </div>
     </header>
 
+    <div class="flow">
+        <svg class="journey" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="journey-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#5b86ff"/>
+                    <stop offset="50%"  stop-color="#0057ff"/>
+                    <stop offset="100%" stop-color="#0043c8"/>
+                </linearGradient>
+            </defs>
+            <path class="journey-base"  d=""/>
+            <path class="journey-trail" d=""/>
+        </svg>
+
     <section>
-        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:380px;height:380px;right:-100px;bottom:-120px;transform:rotate(9deg);opacity:0.05;"><use href="#wp-mark"/></svg>
+        <svg class="section-mark" style="top:30px; right:-40px; width:230px; height:230px; transform:rotate(8deg);" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row">
             <div class="copy">
                 <span class="kicker">Start anywhere</span>
@@ -546,7 +795,7 @@
     </section>
 
     <section style="padding-top: 0;">
-        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:300px;height:300px;left:-80px;top:10px;transform:rotate(-12deg);opacity:0.045;"><use href="#wp-mark"/></svg>
+        <svg class="section-mark" style="top:20px; left:-60px; width:280px; height:280px; transform:rotate(-12deg); opacity:0.045;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Focus mode</span>
@@ -594,7 +843,7 @@
     </div>
 
     <section style="padding-bottom: 0;">
-        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:320px;height:320px;left:-90px;bottom:-70px;transform:rotate(-7deg);opacity:0.05;"><use href="#wp-mark"/></svg>
+        <svg class="section-mark" style="top:60px; right:-50px; width:240px; height:240px; transform:rotate(14deg); opacity:0.05;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row">
             <div class="copy">
                 <span class="kicker">Insights</span>
@@ -611,7 +860,7 @@
     </section>
 
     <section>
-        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:400px;height:400px;right:-120px;top:-90px;transform:rotate(11deg);opacity:0.045;"><use href="#wp-mark"/></svg>
+        <svg class="section-mark" style="bottom:30px; left:-40px; width:210px; height:210px; transform:rotate(-6deg); opacity:0.045;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Your growth</span>
@@ -701,7 +950,7 @@
     </div>
 
     <div class="darkmode">
-        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:190px;height:190px;right:-30px;bottom:-25px;transform:rotate(-10deg);color:#3a59c9;opacity:0.12;"><use href="#wp-mark"/></svg>
+        <svg class="section-mark" style="top:-70px; right:-70px; width:340px; height:340px; color:#9ab4ff; opacity:0.07; transform:rotate(10deg); filter:none;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <span class="kicker">Day or night</span>
         <h2>Beautiful in the dark, too.</h2>
         <p>A focused, native iOS experience with a true dark mode for late-night study sessions and early-morning reps.</p>
@@ -715,6 +964,7 @@
         <h3>Built thoughtfully, with your privacy in mind.</h3>
         <p>Your assessments and progress are stored on your device. Sign in with Apple keeps your identity private — WisePath never needs your email. We don't sell your data or run ad trackers. <a href="privacy.html">Read the privacy policy →</a></p>
     </section>
+    </div><!-- /.flow -->
 
     <footer class="footer">
         <div class="nav">
@@ -724,5 +974,99 @@
         </div>
         <p>© 2026 Nimrod Bar. All rights reserved.</p>
     </footer>
+
+    <script>
+    (function () {
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* ---- Reveal content as it scrolls into view ---- */
+        var revealEls = document.querySelectorAll(
+            '.row .copy, .row .visual, .feature, .stat, .how .kicker, .how h2, .darkmode .phone, .trust h3, .trust p'
+        );
+        if (!reduce && 'IntersectionObserver' in window) {
+            revealEls.forEach(function (el, i) {
+                el.classList.add('reveal');
+                el.style.transitionDelay = ((i % 3) * 70) + 'ms';
+            });
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+            revealEls.forEach(function (el) { io.observe(el); });
+        }
+
+        /* ---- The WisePath journey line, drawn as you scroll ---- */
+        var flow  = document.querySelector('.flow');
+        var svg   = document.querySelector('.journey');
+        var base  = svg && svg.querySelector('.journey-base');
+        var trail = svg && svg.querySelector('.journey-trail');
+        if (!flow || !svg || !trail) return;
+
+        var nodes = [], crossYs = [], pathLen = 0;
+
+        function build() {
+            nodes.forEach(function (n) { n.remove(); });
+            nodes = []; crossYs = [];
+
+            var w = flow.clientWidth, h = flow.clientHeight;
+            if (w < 760) { svg.style.display = 'none'; return; }
+            svg.style.display = '';
+
+            var cx = w / 2, amp = Math.min(46, w * 0.035), seg = 300;
+            var d = 'M ' + cx + ' 0', y = 0, dir = 1;
+            crossYs.push(0);
+            while (y < h) {
+                var ny = Math.min(y + seg, h);
+                var c1y = y + (ny - y) * 0.4, c2y = ny - (ny - y) * 0.4;
+                d += ' C ' + (cx + dir * amp) + ' ' + c1y + ', ' + (cx + dir * amp) + ' ' + c2y + ', ' + cx + ' ' + ny;
+                crossYs.push(ny);
+                y = ny; dir *= -1;
+            }
+            svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+            base.setAttribute('d', d);
+            trail.setAttribute('d', d);
+
+            pathLen = trail.getTotalLength();
+            trail.style.strokeDasharray = pathLen;
+            trail.style.strokeDashoffset = reduce ? 0 : pathLen;
+
+            crossYs.slice(1, -1).forEach(function (yy) {
+                var n = document.createElement('div');
+                n.className = 'journey-node';
+                n.style.left = cx + 'px';
+                n.style.top = yy + 'px';
+                n.dataset.y = yy;
+                if (reduce) n.classList.add('lit');
+                flow.appendChild(n);
+                nodes.push(n);
+            });
+            update();
+        }
+
+        function update() {
+            if (svg.style.display === 'none') return;
+            var h = flow.clientHeight;
+            var rect = flow.getBoundingClientRect();
+            var drawn = Math.min(Math.max(window.innerHeight * 0.62 - rect.top, 0), h);
+            var p = h ? drawn / h : 0;
+            if (!reduce) trail.style.strokeDashoffset = pathLen * (1 - p);
+            nodes.forEach(function (n) {
+                if (drawn >= parseFloat(n.dataset.y)) n.classList.add('lit');
+                else n.classList.remove('lit');
+            });
+        }
+
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(function () { update(); ticking = false; }); }
+        }, { passive: true });
+
+        var rt;
+        window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(build, 150); });
+        window.addEventListener('load', build);
+        build();
+    })();
+    </script>
 </body>
 </html>
