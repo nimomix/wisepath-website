@@ -67,32 +67,45 @@
             z-index: 1;
         }
         .brand {
+            display: flex;
+            width: fit-content;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 28px;
+        }
+        .brand .mark-badge {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 26px;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 10px 30px -10px rgba(20,40,140,0.7), 0 0 0 1px rgba(0,0,0,0.04);
         }
         .brand .mark {
-            width: 40px;
-            height: 40px;
+            width: 34px;
+            height: 34px;
             color: #fff;
             display: block;
-            filter: drop-shadow(0 3px 14px rgba(120,160,255,0.55));
+            filter: drop-shadow(0 2px 10px rgba(150,180,255,0.45));
         }
-        .brand .wordmark { font-size: 21px; font-weight: 600; letter-spacing: 0.2px; }
+        .brand .wordmark { font-size: 22px; font-weight: 600; letter-spacing: -0.2px; }
 
-        /* Large, faint brand watermark behind the hero text */
+        /* Large, faint brand mark floating behind the hero — softens the composition */
         .hero-mark {
             position: absolute;
-            top: -40px;
-            left: -60px;
-            width: 460px;
-            height: auto;
-            color: #fff;
-            opacity: 0.05;
-            transform: rotate(-8deg);
+            top: -90px;
+            left: -90px;
+            width: 480px;
+            height: 480px;
+            color: #acc1ff;
+            opacity: 0.09;
+            transform: rotate(-6deg);
             pointer-events: none;
             z-index: 0;
+            filter: drop-shadow(0 0 50px rgba(120,160,255,0.45));
         }
         .launch-pill {
             display: inline-flex;
@@ -119,17 +132,22 @@
         .hero h1 {
             font-family: var(--display);
             font-optical-sizing: auto;
-            font-size: 62px;
-            line-height: 1.02;
+            font-size: clamp(42px, 6.4vw, 68px);
+            line-height: 1.03;
             font-weight: 500;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.8px;
             margin-bottom: 24px;
             text-wrap: balance;
+            text-shadow: 0 2px 34px rgba(110,150,255,0.22);
         }
         .hero h1 em {
             font-style: italic;
             font-weight: 500;
-            color: #cdd9ff;
+            color: #c3d2ff;
+            background: linear-gradient(92deg, #e1e8ff 0%, #9fb6ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .hero .lede {
             font-size: 18px;
@@ -327,9 +345,9 @@
         @media (max-width: 800px) {
             .hero { padding-top: 56px; }
             .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
-            .brand { justify-content: center; }
-            .hero-mark { width: 300px; top: -30px; left: 50%; margin-left: -150px; opacity: 0.045; }
-            .hero h1 { font-size: 42px; letter-spacing: -0.4px; }
+            .brand { margin-left: auto; margin-right: auto; }
+            .hero-mark { width: 300px; height: 300px; top: -50px; left: 50%; margin-left: -150px; opacity: 0.06; }
+            .hero h1 { letter-spacing: -0.5px; }
             .hero .lede { margin-left: auto; margin-right: auto; }
             .badges { justify-content: center; }
             section { padding: 70px 24px; }
@@ -349,22 +367,23 @@
 </head>
 <body>
 
+    <!-- Brand mark: graduation cap resting on a home of learning, with a lit doorway + tassel -->
+    <svg width="0" height="0" aria-hidden="true" style="position:absolute" focusable="false">
+        <symbol id="wp-mark" viewBox="0 0 64 64">
+            <path d="M20 36 H44 V52.5 C44 53.33 43.33 54 42.5 54 H21.5 C20.67 54 20 53.33 20 52.5 Z" fill="currentColor" opacity="0.38"/>
+            <path d="M28 54 V46 C28 43.79 29.79 42 32 42 C34.21 42 36 43.79 36 46 V54 Z" fill="currentColor" opacity="0.92"/>
+            <path d="M32 18 L56 29 L32 40 L8 29 Z" fill="currentColor"/>
+            <path d="M56 29 V41.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+            <circle cx="56" cy="44" r="2.7" fill="currentColor"/>
+        </symbol>
+    </svg>
+
     <header class="hero">
-        <svg class="hero-mark" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M18 25.5 L32 31.5 L46 25.5 V37 C46 40.3 39.7 43 32 43 C24.3 43 18 40.3 18 37 Z" fill="currentColor" opacity="0.5"/>
-            <path d="M32 7 L62 20.5 L32 34 L2 20.5 Z" fill="currentColor"/>
-            <path d="M58.6 21.7 V35.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-            <circle cx="58.6" cy="38" r="2.7" fill="currentColor"/>
-        </svg>
+        <svg class="hero-mark" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="hero-inner">
             <div>
                 <span class="brand">
-                    <svg class="mark" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M18 25.5 L32 31.5 L46 25.5 V37 C46 40.3 39.7 43 32 43 C24.3 43 18 40.3 18 37 Z" fill="currentColor" opacity="0.5"/>
-                        <path d="M32 7 L62 20.5 L32 34 L2 20.5 Z" fill="currentColor"/>
-                        <path d="M58.6 21.7 V35.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-                        <circle cx="58.6" cy="38" r="2.7" fill="currentColor"/>
-                    </svg>
+                    <span class="mark-badge"><svg class="mark" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg></span>
                     <span class="wordmark">WisePath</span>
                 </span>
                 <span class="launch-pill">Coming soon to the App Store</span>
