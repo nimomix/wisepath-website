@@ -565,6 +565,24 @@
             filter: drop-shadow(0 18px 40px rgba(0,67,200,0.25));
         }
 
+        /* A brand silhouette that ignites when the journey trail reaches it */
+        .glow-mark {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.045;
+            pointer-events: none;
+            z-index: 0;
+            filter: drop-shadow(0 18px 40px rgba(0,67,200,0.18));
+            transition: opacity .8s ease, filter .8s ease;
+        }
+        .glow-mark.lit {
+            opacity: 0.17;
+            filter:
+                drop-shadow(0 0 28px rgba(0,87,255,0.55))
+                drop-shadow(0 0 8px rgba(91,134,255,0.6))
+                drop-shadow(0 18px 40px rgba(0,67,200,0.3));
+        }
+
         /* Reveal-on-scroll — content rises gently into place */
         .reveal {
             opacity: 0;
@@ -877,6 +895,7 @@
 
     <section>
         <svg class="section-mark" style="top:50%; right:-165px; width:300px; height:300px; transform:translateY(-50%) rotate(-6deg); opacity:0.035;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <svg class="glow-mark" style="top:50%; left:-150px; width:300px; height:300px; transform:translateY(-50%) rotate(-9deg);" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Your growth</span>
@@ -1049,14 +1068,19 @@
         var trail = svg && svg.querySelector('.journey-trail');
         if (!flow || !svg || !trail) return;
 
-        var nodes = [], crossYs = [], pathLen = 0;
+        var nodes = [], crossYs = [], pathLen = 0, glowMarks = [];
 
         function build() {
             nodes.forEach(function (n) { n.remove(); });
             nodes = []; crossYs = [];
+            glowMarks = Array.prototype.slice.call(flow.querySelectorAll('.glow-mark'));
 
             var w = flow.clientWidth, h = flow.clientHeight;
-            if (w < 760) { svg.style.display = 'none'; return; }
+            if (w < 760) {
+                svg.style.display = 'none';
+                glowMarks.forEach(function (g) { g.classList.add('lit'); });
+                return;
+            }
             svg.style.display = '';
 
             var cx = w / 2, amp = Math.min(46, w * 0.035), seg = 300;
@@ -1087,6 +1111,13 @@
                 flow.appendChild(n);
                 nodes.push(n);
             });
+
+            var fr = flow.getBoundingClientRect();
+            glowMarks.forEach(function (g) {
+                var grc = g.getBoundingClientRect();
+                g.dataset.y = (grc.top + grc.height / 2) - fr.top;
+                g.classList.toggle('lit', reduce);
+            });
             update();
         }
 
@@ -1100,6 +1131,10 @@
             nodes.forEach(function (n) {
                 if (drawn >= parseFloat(n.dataset.y)) n.classList.add('lit');
                 else n.classList.remove('lit');
+            });
+            glowMarks.forEach(function (g) {
+                if (drawn >= parseFloat(g.dataset.y)) g.classList.add('lit');
+                else g.classList.remove('lit');
             });
         }
 
