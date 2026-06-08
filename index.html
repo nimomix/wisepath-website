@@ -56,6 +56,7 @@
             padding: 80px 24px 90px;
             overflow: hidden;
             position: relative;
+            isolation: isolate;   /* scope the wand glow/sparkles (z-index:-1) above the hero bg */
         }
         .hero-inner {
             max-width: 1080px;
@@ -94,19 +95,63 @@
         }
         .brand .wordmark { font-size: 22px; font-weight: 600; letter-spacing: -0.2px; }
 
-        /* Large, faint brand mark floating behind the hero — softens the composition */
+        /* Large, faint brand mark floating behind the hero — disassembled into its
+           pieces (cap + tassel / house + door), pulled slightly apart so the eye
+           can still reassemble it. */
         .hero-mark {
             position: absolute;
-            top: -90px;
-            left: -90px;
-            width: 480px;
-            height: 480px;
+            top: -795px;
+            left: -955px;
+            width: 2000px;
+            height: 2000px;
             color: #acc1ff;
-            opacity: 0.09;
-            transform: rotate(-6deg);
+            opacity: 0.08;
+            transform: rotate(-8deg);
             pointer-events: none;
             z-index: 0;
-            filter: drop-shadow(0 0 50px rgba(120,160,255,0.45));
+            filter: drop-shadow(0 0 70px rgba(120,160,255,0.4));
+        }
+        .hero-mark .piece {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        /* The journey is born at the period of "…the wise path." and flows down
+           out of the hero, where the main trail picks it up in the sections below. */
+        .hero-path {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .hero-path-line {
+            fill: none;
+            stroke: rgba(176,201,255,0.45);
+            stroke-width: 2;
+            stroke-dasharray: 2 10;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 6px rgba(120,160,255,0.35));
+        }
+        .hero-path-dot {
+            position: absolute;
+            width: 11px;
+            height: 11px;
+            margin: -5.5px 0 0 -5.5px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 40%, #eef3ff, #9bb6ff);
+            box-shadow: 0 0 0 4px rgba(140,170,255,0.16), 0 0 16px 3px rgba(120,160,255,0.7);
+            pointer-events: none;
+            z-index: 2;
+        }
+        /* On desktop the main animated trail handles the hero; the static
+           dot/line is only used on mobile (where the trail is hidden). */
+        @media (min-width: 801px) {
+            .hero-path, .hero-path-dot { display: none; }
         }
         .launch-pill {
             display: inline-flex;
@@ -140,6 +185,70 @@
             margin-bottom: 26px;
             text-wrap: balance;
             text-shadow: 0 2px 34px rgba(110,150,255,0.22);
+            position: relative;
+            cursor: default;
+        }
+        .hero .lede, .hero .wordmark { cursor: default; }
+        /* Charm/AI flourish: the cursor acts as a wand — a small blue-violet glow
+           and tiny sparkles trail it under the headline. */
+        .wand-glow {
+            position: absolute;
+            z-index: -1;
+            left: 0;
+            top: 0;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(224,220,255,0.9) 0%, rgba(170,130,255,0.55) 20%,
+                rgba(140,120,255,0.22) 42%, transparent 64%);
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity .3s ease;   /* position is driven per-frame so it traces the path */
+            pointer-events: none;
+        }
+        .wand-glow.on { opacity: 1; }
+        /* Soft glow blobs left along the cursor path — a comet trail for the wand */
+        .wand-trail {
+            position: absolute;
+            z-index: -1;
+            left: 0;
+            top: 0;
+            width: 66px;
+            height: 66px;
+            margin: -33px 0 0 -33px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(180,160,255,0.5), rgba(150,120,255,0.2) 45%, transparent 68%);
+            filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            animation: wand-trail-fade .6s ease-out forwards;
+        }
+        @keyframes wand-trail-fade {
+            0%   { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 0;   transform: scale(0.45); }
+        }
+        /* Tiny sparkles spawned at the cursor as it moves over the headline */
+        .sparkle {
+            position: absolute;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle, #ffffff 0%, #cbd9ff 55%, transparent 72%);
+            clip-path: polygon(50% 0%, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0% 50%, 40% 40%);
+            opacity: 0;
+            filter: drop-shadow(0 0 4px rgba(160,185,255,0.9));
+            animation: sparkle-pop .8s ease-out forwards;
+        }
+        @keyframes sparkle-pop {
+            0%   { opacity: 0; transform: scale(0)   rotate(0deg); }
+            35%  { opacity: 1; transform: scale(1)   rotate(35deg); }
+            100% { opacity: 0; transform: scale(.2)  rotate(80deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .wand-glow { display: none; }
+            .sparkle { display: none; }
         }
         /* First line: strong, confident statement */
         .hero h1 .line-1 {
@@ -238,7 +347,6 @@
             margin: 0 auto;
             padding: 110px 24px;
             position: relative;
-            overflow: hidden;
         }
         section .row,
         section.trust > * { position: relative; z-index: 1; }
@@ -357,15 +465,65 @@
             background: #0a0f1c;
             color: white;
             text-align: center;
-            padding: 100px 24px;
+            padding: 250px 24px 100px;   /* extra top room for the cap above "Day or night" */
             position: relative;
             overflow: hidden;
+            isolation: isolate;   /* scope the wand layers above the dark bg */
         }
         .darkmode > * { position: relative; z-index: 1; }
         .darkmode .kicker { color: var(--primary-dim); }
         .darkmode h2 { color: white; }
         .darkmode p { color: #9aa3b2; max-width: 520px; margin: 0 auto 48px; font-size: 17px; }
         .darkmode .phone { box-shadow: 0 30px 80px -20px rgba(0,87,255,0.4); }
+        /* keep the wand layers behind the dark-section content (override .darkmode > *) */
+        .darkmode > .wand-glow, .darkmode > .wand-path, .darkmode > .sparkle {
+            position: absolute;
+            z-index: -1;
+        }
+        /* the brand cap must stay absolutely positioned (override .darkmode > *) so it centers */
+        .darkmode > .section-mark { position: absolute; z-index: 0; }
+        /* dark-section cap with a warm light glowing from its doorway */
+        .darkmode > .dark-cap { position: absolute; z-index: 0; }
+        .dark-cap { pointer-events: none; }
+        .dark-cap .cap {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            color: #9ab4ff;
+            filter: blur(4px);   /* opacity is set per-group: faint blue cap, brighter door */
+        }
+        /* soft warm bloom right at the doorway/threshold (light spilling out, low so it
+           stays at the door, not up the walls) */
+        .dark-cap .door-glow {
+            position: absolute;
+            left: 50%;
+            top: 80%;
+            width: 40%;
+            height: 28%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(255,172,88,0.6) 0%, rgba(255,142,54,0.28) 45%, transparent 74%);
+            filter: blur(9px);
+        }
+        /* the glowing path the cursor draws, that the glow then travels along */
+        .wand-path {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+        }
+        .wand-path path {
+            fill: none;
+            stroke: rgba(190,180,255,0.5);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 4px rgba(150,130,255,0.45));
+        }
 
         /* Badge collection */
         .collection {
@@ -374,6 +532,17 @@
             border-bottom: 1px solid var(--line);
             position: relative;
             overflow: hidden;
+        }
+        /* The journey's destination: fills with blue as the trail arrives */
+        .collection-arrival {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(900px 520px at 50% 0%, rgba(0,87,255,0.16), transparent 68%),
+                linear-gradient(180deg, rgba(91,134,255,0.12) 0%, rgba(91,134,255,0.16) 100%);
         }
         .collection-inner {
             max-width: 1080px;
@@ -470,17 +639,17 @@
         /* Trust line */
         .trust {
             text-align: center;
-            padding: 72px 24px;
+            padding: 132px 24px;
             background: white;
             border-top: 1px solid var(--line);
         }
-        .trust h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 10px; color: var(--ink); }
-        .trust p { font-size: 15px; color: var(--muted); max-width: 560px; margin: 0 auto; line-height: 1.65; }
+        .trust h3 { font-size: 27px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 16px; color: var(--ink); }
+        .trust p { font-size: 16px; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.7; }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 40px 24px 56px;
+            padding: 68px 24px 76px;
             color: #8b9099;
             font-size: 13px;
             background: var(--bg);
@@ -488,7 +657,27 @@
         }
         .footer a { color: var(--primary); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
-        .nav { display: flex; gap: 24px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+        .footer-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(150deg, #5b85ff, #0a43c8);
+            box-shadow: 0 12px 28px -12px rgba(20,40,140,0.55), inset 0 1px 1px rgba(255,255,255,0.25);
+            margin-bottom: 26px;
+        }
+        .footer-mark svg { width: 27px; height: 27px; color: #fff; filter: drop-shadow(0 2px 6px rgba(20,40,120,0.4)); }
+        .footer-logo {
+            display: inline-block;
+            width: 58px;
+            height: 58px;
+            margin-bottom: 24px;
+            border-radius: 15px;
+            box-shadow: 0 14px 30px -14px rgba(20,40,120,0.45);
+        }
+        .nav { display: flex; gap: 24px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
 
         /* ===================================================================
            Premium atmosphere, journey path & motion  (wisepath-web-005)
@@ -564,6 +753,27 @@
             z-index: 0;
             filter: drop-shadow(0 18px 40px rgba(0,67,200,0.25));
         }
+
+        /* A brand silhouette that ignites when the journey trail reaches it */
+        .glow-mark {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(6px) drop-shadow(0 18px 40px rgba(0,67,200,0.18));
+            transition: opacity .8s ease, filter .8s ease;
+        }
+        .glow-mark.lit {
+            opacity: 0.12;
+            filter:
+                blur(6px)
+                drop-shadow(0 0 16px rgba(0,87,255,0.36))
+                drop-shadow(0 0 6px rgba(91,134,255,0.4));
+        }
+        /* A deconstructed glow-mark: cap + house pulled slightly apart */
+        .glow-cluster { position: absolute; pointer-events: none; z-index: 0; }
+        .glow-cluster .piece { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
         /* Reveal-on-scroll — content rises gently into place */
         .reveal {
@@ -704,7 +914,7 @@
         @media (max-width: 800px) {
             .features::before { display: none; }
             .journey, .journey-node { display: none; }
-            .section-mark { display: none; }
+            .section-mark, .glow-mark { display: none; }
             .hero { padding-top: 56px; }
             .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
             .brand { margin-left: auto; margin-right: auto; }
@@ -751,7 +961,15 @@
     </svg>
 
     <header class="hero">
-        <svg class="hero-mark" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <span class="hero-mark" aria-hidden="true">
+            <svg class="piece piece-cap" viewBox="0 0 64 64" focusable="false">
+                <path d="M32 18 L56 29 L32 40 L8 29 Z" fill="currentColor"/>
+                <path d="M56 29 V41.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+                <circle cx="56" cy="44" r="2.7" fill="currentColor"/>
+            </svg>
+        </span>
+        <svg class="hero-path" aria-hidden="true" focusable="false"><path class="hero-path-line" d=""/></svg>
+        <span class="hero-path-dot" aria-hidden="true"></span>
         <div class="hero-inner">
             <div>
                 <span class="brand">
@@ -783,8 +1001,10 @@
         <svg class="journey" aria-hidden="true" focusable="false" preserveAspectRatio="none">
             <defs>
                 <linearGradient id="journey-grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stop-color="#5b86ff"/>
-                    <stop offset="50%"  stop-color="#0057ff"/>
+                    <stop offset="0%"   stop-color="#dbe6ff"/>
+                    <stop offset="7%"   stop-color="#aec3ff"/>
+                    <stop offset="11%"  stop-color="#5b86ff"/>
+                    <stop offset="55%"  stop-color="#0057ff"/>
                     <stop offset="100%" stop-color="#0043c8"/>
                 </linearGradient>
             </defs>
@@ -793,7 +1013,17 @@
         </svg>
 
     <section>
-        <svg class="section-mark" style="top:50%; left:-165px; width:320px; height:320px; transform:translateY(-50%) rotate(-8deg); opacity:0.035;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <span class="glow-cluster" style="bottom:-260px; left:-75%; width:1300px; height:1300px; opacity:0.6;" aria-hidden="true">
+            <svg class="glow-mark piece" style="transform:translate(-6%,-5%) rotate(-9deg);" viewBox="0 0 64 64" focusable="false">
+                <path d="M32 18 L56 29 L32 40 L8 29 Z" fill="currentColor"/>
+                <path d="M56 29 V41.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+                <circle cx="56" cy="44" r="2.7" fill="currentColor"/>
+            </svg>
+            <svg class="glow-mark piece" style="transform:translate(2%,3%) rotate(-8deg);" viewBox="0 0 64 64" focusable="false">
+                <path d="M20 36 H44 V52.5 C44 53.33 43.33 54 42.5 54 H21.5 C20.67 54 20 53.33 20 52.5 Z" fill="currentColor" opacity="0.5"/>
+                <path d="M28 54 V46 C28 43.79 29.79 42 32 42 C34.21 42 36 43.79 36 46 V54 Z" fill="currentColor" opacity="0.85"/>
+            </svg>
+        </span>
         <div class="row">
             <div class="copy">
                 <span class="kicker">Start anywhere</span>
@@ -811,7 +1041,7 @@
     </section>
 
     <section style="padding-top: 0;">
-        <svg class="section-mark" style="top:50%; right:-165px; width:320px; height:320px; transform:translateY(-50%) rotate(10deg); opacity:0.035;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <svg class="section-mark" style="bottom:44px; right:40px; width:190px; height:190px; transform:rotate(10deg); opacity:0.06; filter:blur(7px);" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Focus mode</span>
@@ -859,7 +1089,7 @@
     </div>
 
     <section style="padding-bottom: 0;">
-        <svg class="section-mark" style="top:50%; left:-165px; width:300px; height:300px; transform:translateY(-50%) rotate(6deg); opacity:0.035;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <svg class="glow-mark" style="bottom:44px; left:40px; width:182px; height:182px; transform:rotate(7deg);" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row">
             <div class="copy">
                 <span class="kicker">Insights</span>
@@ -876,7 +1106,7 @@
     </section>
 
     <section>
-        <svg class="section-mark" style="top:50%; right:-165px; width:300px; height:300px; transform:translateY(-50%) rotate(-6deg); opacity:0.035;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <svg class="glow-mark" style="bottom:44px; right:48px; width:208px; height:208px; transform:rotate(-5deg);" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
         <div class="row flip">
             <div class="copy">
                 <span class="kicker">Your growth</span>
@@ -894,6 +1124,7 @@
     </section>
 
     <div class="collection">
+        <div class="collection-arrival" aria-hidden="true"></div>
         <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:520px;height:520px;left:50%;margin-left:-260px;top:-150px;transform:rotate(-5deg);opacity:0.04;"><use href="#wp-mark"/></svg>
         <div class="collection-inner">
             <span class="kicker">Your collection</span>
@@ -996,7 +1227,31 @@
     </div>
 
     <div class="darkmode">
-        <svg class="section-mark" style="top:-110px; right:-120px; width:260px; height:260px; color:#9ab4ff; opacity:0.04; transform:rotate(10deg); filter:none;" aria-hidden="true" focusable="false"><use href="#wp-mark"/></svg>
+        <span class="dark-cap" style="top:30px; left:50%; width:240px; height:240px; transform:translateX(-50%);" aria-hidden="true">
+            <svg class="cap" viewBox="0 0 64 64" focusable="false">
+                <defs>
+                    <clipPath id="doorClip"><path d="M28 54 V46 C28 43.79 29.79 42 32 42 C34.21 42 36 43.79 36 46 V54 Z"/></clipPath>
+                    <radialGradient id="doorGrad" cx="50%" cy="40%" r="72%">
+                        <stop offset="0%" stop-color="#ffdaa8"/>
+                        <stop offset="55%" stop-color="#ff9e44"/>
+                        <stop offset="100%" stop-color="#ed7820"/>
+                    </radialGradient>
+                </defs>
+                <!-- roof + tassel -->
+                <g fill="#9ab4ff" opacity="0.08">
+                    <path d="M32 18 L56 29 L32 40 L8 29 Z"/>
+                    <path d="M56 29 V41.5" fill="none" stroke="#9ab4ff" stroke-width="2.3" stroke-linecap="round"/>
+                    <circle cx="56" cy="44" r="2.7"/>
+                </g>
+                <!-- house + lit doorway, nudged up so the walls meet the roof -->
+                <g transform="translate(0 -2.5)">
+                    <path d="M20 36 H44 V52.5 C44 53.33 43.33 54 42.5 54 H21.5 C20.67 54 20 53.33 20 52.5 Z" fill="#9ab4ff" opacity="0.08"/>
+                    <g clip-path="url(#doorClip)">
+                        <rect x="25" y="40" width="14" height="16" fill="url(#doorGrad)"/>
+                    </g>
+                </g>
+            </svg>
+        </span>
         <span class="kicker">Day or night</span>
         <h2>Beautiful in the dark, too.</h2>
         <p>A focused, native iOS experience with a true dark mode for late-night study sessions and early-morning reps.</p>
@@ -1006,13 +1261,13 @@
     </div>
 
     <section class="trust">
-        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:240px;height:240px;right:-70px;top:-60px;transform:rotate(-9deg);opacity:0.04;"><use href="#wp-mark"/></svg>
         <h3>Built thoughtfully, with your privacy in mind.</h3>
         <p>Your assessments and progress are stored on your device. Sign in with Apple keeps your identity private — WisePath never needs your email. We don't sell your data or run ad trackers. <a href="privacy.html">Read the privacy policy →</a></p>
     </section>
     </div><!-- /.flow -->
 
     <footer class="footer">
+        <img class="footer-logo" src="images/logo.png" width="58" height="58" alt="WisePath" loading="lazy">
         <div class="nav">
             <a href="privacy.html">Privacy Policy</a>
             <a href="mailto:nimomix@gmail.com">Contact</a>
@@ -1049,35 +1304,85 @@
         var trail = svg && svg.querySelector('.journey-trail');
         if (!flow || !svg || !trail) return;
 
-        var nodes = [], crossYs = [], pathLen = 0;
+        var nodes = [], crossYs = [], pathLen = 0, glowMarks = [], jh = 0, heroY = 0, arrival = null;
 
         function build() {
             nodes.forEach(function (n) { n.remove(); });
             nodes = []; crossYs = [];
+            glowMarks = Array.prototype.slice.call(flow.querySelectorAll('.glow-mark'));
 
             var w = flow.clientWidth, h = flow.clientHeight;
-            if (w < 760) { svg.style.display = 'none'; return; }
+            if (w < 760) {
+                svg.style.display = 'none';
+                glowMarks.forEach(function (g) { g.classList.add('lit'); });
+                return;
+            }
             svg.style.display = '';
 
+            // The journey concludes when it reaches "Your collection" — the path
+            // breaks there (the brand cap takes over), so no nodes spill past it.
+            var collEl = flow.querySelector('.collection');
+            jh = collEl ? collEl.offsetTop : h;
+            arrival = collEl ? collEl.querySelector('.collection-arrival') : null;
+
             var cx = w / 2, amp = Math.min(46, w * 0.035), seg = 300;
-            var d = 'M ' + cx + ' 0', y = 0, dir = 1;
-            crossYs.push(0);
-            while (y < h) {
-                var ny = Math.min(y + seg, h);
-                var c1y = y + (ny - y) * 0.4, c2y = ny - (ny - y) * 0.4;
-                d += ' C ' + (cx + dir * amp) + ' ' + c1y + ', ' + (cx + dir * amp) + ' ' + c2y + ', ' + cx + ' ' + ny;
-                crossYs.push(ny);
-                y = ny; dir *= -1;
+
+            /* One continuous wave: it begins high in the hero and flows down as a
+               single curve, so it never "turns" exactly at the blue→white seam. */
+            var fr0 = flow.getBoundingClientRect();
+            var hrc = document.querySelector('.hero').getBoundingClientRect();
+            heroY = (hrc.top + 96) - fr0.top;        /* ~96px below the hero top; negative */
+
+            var up = [], yy = 0;
+            while (yy - seg > heroY) { yy -= seg; up.push(yy); }
+            up.push(heroY);
+            up.reverse();                            /* [heroY, …, -600, -300] */
+            var down = [0]; yy = 0;
+            while (yy < jh) { yy = Math.min(yy + seg, jh); down.push(yy); }
+            var crosses = up.concat(down);           /* top → bottom */
+            var zero = up.length;                    /* index where y = 0 */
+
+            function wave(from, to) {
+                var d = 'M ' + cx + ' ' + crosses[from];
+                for (var i = from; i < to; i++) {
+                    var a = crosses[i], b = crosses[i + 1];
+                    var dir = ((i - zero) % 2 === 0) ? 1 : -1;
+                    var c1y = a + (b - a) * 0.4, c2y = b - (b - a) * 0.4;
+                    d += ' C ' + (cx + dir * amp) + ' ' + c1y + ', ' + (cx + dir * amp) + ' ' + c2y + ', ' + cx + ' ' + b;
+                }
+                return d;
             }
+
+            var dTrail = wave(0, crosses.length - 1);             /* hero origin + sections */
+            var dBase  = wave(zero, crosses.length - 1);          /* dashed track: sections only */
+
+            /* milestone nodes only in the white sections (none in the hero) */
+            for (var di = 1; di < down.length - 1; di++) crossYs.push(down[di]);
+
+            /* trail gradient: fades in at the very top, stays blueish-white through
+               the hero, then turns blue right as it crosses into the white sections */
+            var bnd = (0 - heroY) / (jh - heroY);
+            var grad = document.getElementById('journey-grad');
+            if (grad) {
+                var p1 = Math.max(bnd - 0.025, 0.04), p2 = Math.min(bnd + 0.025, 0.9);
+                grad.innerHTML =
+                    '<stop offset="0%" stop-color="#dbe6ff" stop-opacity="0"/>' +
+                    '<stop offset="3.5%" stop-color="#dbe6ff"/>' +
+                    '<stop offset="' + (p1 * 100).toFixed(1) + '%" stop-color="#c6d6ff"/>' +
+                    '<stop offset="' + (p2 * 100).toFixed(1) + '%" stop-color="#5b86ff"/>' +
+                    '<stop offset="62%" stop-color="#0057ff"/>' +
+                    '<stop offset="100%" stop-color="#0043c8"/>';
+            }
+
             svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-            base.setAttribute('d', d);
-            trail.setAttribute('d', d);
+            base.setAttribute('d', dBase);
+            trail.setAttribute('d', dTrail);
 
             pathLen = trail.getTotalLength();
             trail.style.strokeDasharray = pathLen;
             trail.style.strokeDashoffset = reduce ? 0 : pathLen;
 
-            crossYs.slice(1, -1).forEach(function (yy) {
+            crossYs.forEach(function (yy) {
                 var n = document.createElement('div');
                 n.className = 'journey-node';
                 n.style.left = cx + 'px';
@@ -1087,20 +1392,40 @@
                 flow.appendChild(n);
                 nodes.push(n);
             });
+
+            var fr = flow.getBoundingClientRect();
+            glowMarks.forEach(function (g) {
+                var grc = g.getBoundingClientRect();
+                g.dataset.y = (grc.top + grc.height / 2) - fr.top;
+                g.classList.toggle('lit', reduce);
+            });
             update();
         }
 
         function update() {
             if (svg.style.display === 'none') return;
-            var h = flow.clientHeight;
             var rect = flow.getBoundingClientRect();
-            var drawn = Math.min(Math.max(window.innerHeight * 0.62 - rect.top, 0), h);
-            var p = h ? drawn / h : 0;
+            var ref = window.innerHeight * 0.62 - rect.top;   /* reference line in flow coords */
+            var span = jh - heroY;                            /* total extent, incl. hero origin */
+            var p = span > 0 ? (ref - heroY) / span : 0;
+            p = Math.min(Math.max(p, 0), 1);
             if (!reduce) trail.style.strokeDashoffset = pathLen * (1 - p);
             nodes.forEach(function (n) {
-                if (drawn >= parseFloat(n.dataset.y)) n.classList.add('lit');
+                if (ref >= parseFloat(n.dataset.y)) n.classList.add('lit');
                 else n.classList.remove('lit');
             });
+            glowMarks.forEach(function (g) {
+                if (ref >= parseFloat(g.dataset.y)) g.classList.add('lit');
+                else g.classList.remove('lit');
+            });
+            /* the collection fills with blue once the trail arrives — it begins at the
+               section's top edge and builds (eased) as you scroll into it, so the colour
+               clearly flows in from the trail rather than being pre-painted */
+            if (arrival) {
+                var START = jh - 80, END = jh + 560;
+                var f = Math.max(0, Math.min(1, (ref - START) / (END - START)));
+                arrival.style.opacity = f * f;   /* ease-in: slow to build, lagging the arrival */
+            }
         }
 
         var ticking = false;
@@ -1112,6 +1437,225 @@
         window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(build, 150); });
         window.addEventListener('load', build);
         build();
+    })();
+
+    /* ---- The journey's origin: a dashed line from the title's period ---- */
+    (function () {
+        var hero = document.querySelector('.hero');
+        var em   = hero && hero.querySelector('h1 em');
+        var line = hero && hero.querySelector('.hero-path-line');
+        var dot  = hero && hero.querySelector('.hero-path-dot');
+        if (!hero || !em || !line) return;
+
+        function build() {
+            var hr = hero.getBoundingClientRect();
+            var er = em.getBoundingClientRect();
+            var sx = er.right - hr.left;                 /* the period, end of the line */
+            var sy = er.bottom - hr.top - er.height * 0.22;
+            var cx = hr.width / 2;                        /* meets the main trail at center-bottom */
+            var ey = hr.height;
+            var span = ey - sy;
+            var d = 'M ' + sx + ' ' + sy +
+                    ' C ' + (sx + 44) + ' ' + (sy + span * 0.16) + ', ' +
+                            (cx + 120) + ' ' + (sy + span * 0.20) + ', ' +
+                            (cx + 76) + ' ' + (sy + span * 0.5) +
+                    ' S ' + (cx - 54) + ' ' + (ey - span * 0.12) + ', ' +
+                            cx + ' ' + ey;
+            line.setAttribute('d', d);
+            if (dot) { dot.style.left = sx + 'px'; dot.style.top = sy + 'px'; }
+        }
+        build();
+        window.addEventListener('resize', build);
+        window.addEventListener('load', build);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    })();
+
+    /* ---- Charm: sparkles + glow behind the hero headline on hover ---- */
+    (function () {
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+        if (reduce || !canHover) return;
+        var hero = document.querySelector('.hero');
+        var h1 = hero && hero.querySelector('h1');
+        if (!hero || !h1) return;
+
+        var glow = document.createElement('span');
+        glow.className = 'wand-glow';
+        hero.appendChild(glow);
+
+        var lastX = 0, lastY = 0, lastSpawn = 0;
+        function sparkleAt(x, y) {
+            var s = document.createElement('span');
+            s.className = 'sparkle';
+            var size = 4 + Math.random() * 6;           /* small: 4–10px */
+            s.style.left = (x + (Math.random() - 0.5) * 30) + 'px';
+            s.style.top = (y + (Math.random() - 0.5) * 30) + 'px';
+            s.style.width = size + 'px';
+            s.style.height = size + 'px';
+            s.addEventListener('animationend', function () { s.remove(); });
+            hero.appendChild(s);
+        }
+        function trailAt(x, y) {
+            var t = document.createElement('span');
+            t.className = 'wand-trail';
+            t.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+            t.addEventListener('animationend', function () { t.remove(); });
+            hero.appendChild(t);
+        }
+        /* The glow traces the cursor's actual path: it renders where the cursor
+           was DELAY ms ago, read from a position history, so it never shortcuts. */
+        var history = [], DELAY = 180, raf = null;
+        function follow(now) {
+            var target = now - DELAY;
+            while (history.length > 2 && history[1].t <= target) history.shift();
+            if (history.length) {
+                var px, py;
+                if (history.length === 1 || history[0].t >= target) {
+                    px = history[0].x; py = history[0].y;
+                } else {
+                    var a = history[0], b = history[1];
+                    var f = Math.max(0, Math.min(1, (target - a.t) / ((b.t - a.t) || 1)));
+                    px = a.x + (b.x - a.x) * f;
+                    py = a.y + (b.y - a.y) * f;
+                }
+                glow.style.transform = 'translate(' + px + 'px,' + py + 'px)';
+            }
+            raf = requestAnimationFrame(follow);
+        }
+        hero.addEventListener('mouseenter', function () {
+            glow.classList.add('on');
+            if (!raf) raf = requestAnimationFrame(follow);
+        });
+        hero.addEventListener('mousemove', function (e) {
+            var hr = hero.getBoundingClientRect();
+            lastX = e.clientX - hr.left;
+            lastY = e.clientY - hr.top;
+            history.push({ x: lastX, y: lastY, t: e.timeStamp || performance.now() });
+            var now = e.timeStamp || performance.now();
+            if (now - lastSpawn > 26) {                 /* a touch denser trail */
+                lastSpawn = now;
+                sparkleAt(lastX, lastY);
+                sparkleAt(lastX, lastY);
+                trailAt(lastX, lastY);                  /* glowing comet trail along the path */
+            }
+        });
+        hero.addEventListener('mouseleave', function () {
+            glow.classList.remove('on');
+            if (raf) { cancelAnimationFrame(raf); raf = null; }
+            history.length = 0;
+        });
+    })();
+
+    /* ---- Dark section: a slower wand that draws a glowing path it then walks ---- */
+    (function () {
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+        if (reduce || !canHover) return;
+        var sec = document.querySelector('.darkmode');
+        if (!sec) return;
+
+        var SVGNS = 'http://www.w3.org/2000/svg';
+        var glow = document.createElement('span');
+        glow.className = 'wand-glow';
+        sec.appendChild(glow);
+        var svg = document.createElementNS(SVGNS, 'svg');
+        svg.setAttribute('class', 'wand-path');
+        var path = document.createElementNS(SVGNS, 'path');
+        svg.appendChild(path);
+        sec.appendChild(svg);
+
+        var history = [], DELAY = 620, lastSpawn = 0, raf = null;
+
+        function sparkleAt(x, y) {
+            var s = document.createElement('span');
+            s.className = 'sparkle';
+            var size = 4 + Math.random() * 6;
+            s.style.left = (x + (Math.random() - 0.5) * 30) + 'px';
+            s.style.top = (y + (Math.random() - 0.5) * 30) + 'px';
+            s.style.width = size + 'px';
+            s.style.height = size + 'px';
+            s.addEventListener('animationend', function () { s.remove(); });
+            sec.appendChild(s);
+        }
+        function frame(now) {
+            var target = now - DELAY;
+            while (history.length > 2 && history[1].t <= target) history.shift();
+            if (history.length) {
+                var gx, gy;
+                if (history.length === 1 || history[0].t >= target) {
+                    gx = history[0].x; gy = history[0].y;
+                } else {
+                    var a = history[0], b = history[1];
+                    var f = Math.max(0, Math.min(1, (target - a.t) / ((b.t - a.t) || 1)));
+                    gx = a.x + (b.x - a.x) * f;
+                    gy = a.y + (b.y - a.y) * f;
+                }
+                glow.style.transform = 'translate(' + gx + 'px,' + gy + 'px)';
+                /* draw from the glow point through every not-yet-visited point to the cursor */
+                var d = 'M ' + gx.toFixed(1) + ' ' + gy.toFixed(1);
+                for (var i = 0; i < history.length; i++) {
+                    if (history[i].t > target) d += ' L ' + history[i].x.toFixed(1) + ' ' + history[i].y.toFixed(1);
+                }
+                path.setAttribute('d', d);
+            }
+            raf = requestAnimationFrame(frame);
+        }
+        sec.addEventListener('mouseenter', function () {
+            glow.classList.add('on');
+            if (!raf) raf = requestAnimationFrame(frame);
+        });
+        sec.addEventListener('mousemove', function (e) {
+            var r = sec.getBoundingClientRect();
+            var x = e.clientX - r.left, y = e.clientY - r.top;
+            history.push({ x: x, y: y, t: e.timeStamp || performance.now() });
+            var now = e.timeStamp || performance.now();
+            if (now - lastSpawn > 30) { lastSpawn = now; sparkleAt(x, y); }
+        });
+        sec.addEventListener('mouseleave', function () {
+            glow.classList.remove('on');
+            if (raf) { cancelAnimationFrame(raf); raf = null; }
+            history.length = 0;
+            path.setAttribute('d', '');
+        });
+    })();
+
+    /* ---- 3D tilt: phones lean toward the cursor in perspective ---- */
+    (function () {
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+        if (reduce || !canHover) return;
+
+        var MAX = 8; /* max tilt in degrees on each axis */
+        Array.prototype.forEach.call(document.querySelectorAll('.phone'), function (phone) {
+            /* keep the slight resting angle of paired phones */
+            var rest = 0, pair = phone.parentElement;
+            if (pair && pair.classList.contains('phone-pair')) {
+                rest = (phone === pair.firstElementChild) ? -2 : 2;
+            }
+            var raf = null, rx = 0, ry = 0;
+            function apply() {
+                raf = null;
+                phone.style.transform =
+                    'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) +
+                    'deg) rotate(' + rest + 'deg) translateY(-6px) scale(1.012)';
+            }
+            phone.addEventListener('mouseenter', function () {
+                phone.style.transition = 'transform .12s ease-out, box-shadow .3s ease';
+                phone.style.willChange = 'transform';
+            });
+            phone.addEventListener('mousemove', function (e) {
+                var r = phone.getBoundingClientRect();
+                ry = ((e.clientX - r.left) / r.width - 0.5) * 2 * MAX;
+                rx = -((e.clientY - r.top) / r.height - 0.5) * 2 * MAX;
+                if (!raf) raf = requestAnimationFrame(apply);
+            });
+            phone.addEventListener('mouseleave', function () {
+                if (raf) { cancelAnimationFrame(raf); raf = null; }
+                phone.style.transition = 'transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease';
+                phone.style.transform = rest ? 'rotate(' + rest + 'deg)' : '';
+                phone.style.willChange = 'auto';
+            });
+        });
     })();
     </script>
 </body>
