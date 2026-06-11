@@ -19,7 +19,7 @@
     <meta name="theme-color" content="#0043c8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+Hebrew:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0043c8;          /* Wise Blue */
@@ -369,6 +369,9 @@
         }
         .row.flip .copy { order: 2; }
         .row.flip .visual { order: 1; }
+        /* The journey path swings down the page centre; nudge the right-hand copy
+           toward the trailing edge so the text keeps clear of the line. */
+        .row.flip .copy { padding-left: 52px; }
         .kicker {
             display: block;
             font-size: 12px;
@@ -700,6 +703,7 @@
         .flow { position: relative; z-index: 0; }
         .flow > section,
         .flow > .how,
+        .flow > .langs,
         .flow > .stats,
         .flow > .darkmode { position: relative; z-index: 1; }
 
@@ -910,6 +914,284 @@
             html { scroll-behavior: auto; }
         }
 
+        /* ===================================================================
+           Any-language showcase (wisepath-web-008)
+           A band of recreated quiz screens, one per language, to show that an
+           assessment can be generated and taken in any language — and that
+           inline code/math renders correctly in every one, including the hard
+           case: left-to-right code/math isolated inside right-to-left text.
+           =================================================================== */
+        /* Transparent like the open content sections, so the single global
+           journey path threads down through it (behind the phones) and emerges
+           straight out of the "How it works" band above it. */
+        .langs {
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .langs-inner {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 104px 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        /* The journey path runs down the centre and would cross the text. A soft
+           "clearing" behind the intro and the footnote masks the path right where
+           the words are, so the line tunnels under them — diving in above and
+           surfacing below — without ever crossing the text. The radial fades at
+           the edges so there's no hard plate; the top is pulled well above the
+           kicker so the line fades out with room to spare before the title. */
+        .langs-intro, .langs-foot { position: relative; z-index: 1; }
+        .langs-intro::before, .langs-foot::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 158%;
+            background: radial-gradient(56% 54% at 50% 50%,
+                var(--bg) 0%, var(--bg) 56%, rgba(247,249,251,0) 100%);
+            pointer-events: none;
+        }
+        .langs-intro::before {
+            top: -104px;
+            bottom: -96px;
+            /* a taller, slightly fuller ellipse so the line stays hidden well
+               below the paragraph (surfacing only with a gap before the phones)
+               while the top coverage above the kicker is unchanged */
+            background: radial-gradient(58% 60% at 50% 50%,
+                var(--bg) 0%, var(--bg) 60%, rgba(247,249,251,0) 100%);
+        }
+        .langs-foot::before  { top: -64px;  bottom: -64px; width: 200%; }
+        .langs .kicker { text-align: center; }
+        .langs h2 { max-width: 20ch; margin: 0 auto 18px; }
+        .langs-lede {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--ink-soft);
+            max-width: 620px;
+            margin: 0 auto 60px;
+        }
+        .lang-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 38px 30px;
+        }
+        .lang-card { display: flex; flex-direction: column; align-items: center; }
+        .lang-card .phone { width: 212px; max-width: 212px; }
+        /* Two cards (English — obvious — and Arabic) are dropped from the wide
+           single-row layout so it stays one clean row of four. They come back
+           in the horizontal-scroll view below, where there's room for all six. */
+        .lang-card--extra { display: none; }
+        .lang-card:nth-child(odd)  .phone { transform: rotate(-1.6deg); }
+        .lang-card:nth-child(even) .phone { transform: rotate(1.6deg); }
+        .lang-cap {
+            margin-top: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: var(--ink);
+        }
+        .lang-cap .endo { color: var(--muted); font-weight: 500; }
+        .langs-foot { font-size: 15px; color: var(--muted); max-width: 600px; margin: 60px auto 0; }
+        .langs-foot strong { color: var(--ink-soft); font-weight: 600; }
+
+        /* A single recreated quiz screen rendered inside a .phone frame */
+        .qz {
+            height: 460px;
+            background: var(--bg);
+            border-radius: 36px;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            padding: 0 14px 14px;
+            text-align: left;
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .qz[dir="rtl"] { text-align: right; }
+        /* script-appropriate type so each language renders crisply everywhere */
+        .qz[lang="he"] { font-family: 'Noto Sans Hebrew', 'Inter', sans-serif; }
+        .qz[lang="ar"] { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
+        .qz[lang="ja"] { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+        .qz-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 26px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--ink);
+            padding: 0 4px;
+        }
+        .qz-status .notch { width: 52px; height: 13px; background: #000; border-radius: 8px; }
+        .qz-status .sig { display: inline-flex; gap: 3px; align-items: center; color: var(--ink); }
+        .qz-status .sig b { display: inline-block; width: 16px; height: 9px; border: 1.2px solid currentColor; border-radius: 2.5px; opacity: 0.85; }
+        .qz-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 2px 10px;
+        }
+        .qz-nav .back {
+            width: 26px; height: 26px;
+            flex: 0 0 26px;
+            border-radius: 50%;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(20,40,90,0.12);
+            color: var(--ink);
+        }
+        .qz-nav .back svg { width: 13px; height: 13px; }
+        .qz[dir="rtl"] .qz-nav .back svg { transform: scaleX(-1); }
+        .qz-nav .topic {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* small offset toward the back button so the title reads centered
+               without stealing the room short titles need */
+            margin-inline-end: 8px;
+        }
+        .qz-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+        .qz-meta .time { display: inline-flex; align-items: center; gap: 4px; }
+        .qz-meta .time::before {
+            content: "";
+            width: 9px; height: 9px;
+            border: 1.3px solid currentColor;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .qz-prog {
+            position: relative;
+            height: 4px;
+            border-radius: 4px;
+            background: #e3e6ea;
+            margin: 8px 0 16px;
+            overflow: hidden;
+        }
+        /* fill anchored to the start edge so the bar mirrors per language:
+           left for LTR, right for RTL */
+        .qz-prog i {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary-bright), var(--primary));
+        }
+        .qz[dir="rtl"] .qz-prog i { left: auto; right: 0; }
+        .qz-q {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            line-height: 1.32;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+        /* Inline code & math kept in the prose flow. unicode-bidi:isolate is the
+           key bit: it pins LTR code/math correctly even inside RTL text. */
+        .qz code, .qz .m {
+            unicode-bidi: isolate;
+            direction: ltr;
+        }
+        .qz code {
+            font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+            background: var(--primary-wash);
+            color: var(--primary);
+            padding: 1px 5px;
+            border-radius: 5px;
+        }
+        .qz .m {
+            font-family: var(--display);
+            font-style: italic;
+            font-weight: 500;
+        }
+        .qz-opts { display: flex; flex-direction: column; gap: 9px; }
+        .qz-opt {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 42px;
+            padding: 8px 11px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .qz-opt .radio {
+            width: 16px; height: 16px;
+            flex: 0 0 16px;
+            border-radius: 50%;
+            border: 1.6px solid #c4c9d4;
+        }
+        .qz-opt.sel {
+            border-color: var(--primary);
+            background: var(--primary-wash);
+            color: var(--ink);
+            font-weight: 600;
+        }
+        .qz-opt.sel .radio {
+            border-color: var(--primary);
+            background:
+                radial-gradient(circle, #fff 0 28%, transparent 30%),
+                var(--primary);
+        }
+        .qz-foot {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 14px;
+        }
+        .qz-foot span {
+            flex: 1;
+            height: 38px;
+            border-radius: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .qz-foot .skip { background: #eceef2; color: var(--primary); border: 1px solid var(--primary); }
+        .qz-foot .next { background: var(--primary); color: #fff; box-shadow: 0 8px 18px -8px rgba(0,67,200,0.6); }
+
+        /* Once four phones no longer fit side by side, switch the showcase to a
+           horizontal scroll and reveal the two extras so all six are reachable. */
+        @media (max-width: 1020px) {
+            .lang-card--extra { display: flex; }
+            .lang-grid {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                scroll-snap-type: x mandatory;
+                gap: 22px;
+                padding-bottom: 16px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .lang-card { scroll-snap-align: center; flex: 0 0 auto; }
+        }
+
         /* Responsive */
         @media (max-width: 800px) {
             .features::before { display: none; }
@@ -924,7 +1206,7 @@
             .badges { justify-content: center; }
             section { padding: 70px 24px; }
             .row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-            .row.flip .copy { order: 1; }
+            .row.flip .copy { order: 1; padding-left: 0; }
             .row.flip .visual { order: 2; }
             .copy p { margin-left: auto; margin-right: auto; }
             h2 { font-size: 30px; }
@@ -933,6 +1215,9 @@
             .how-inner { padding: 70px 24px; }
             .collection-inner { padding: 70px 24px; }
             .collection-lede { margin-bottom: 40px; }
+            .langs-inner { padding: 70px 16px; }
+            .langs-lede { margin-bottom: 44px; }
+            .langs-foot { margin-top: 40px; }
             .badge-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
             .badge-card { padding: 24px 22px; }
             .grade-row { gap: 14px; }
@@ -1085,6 +1370,135 @@
                     <p>Earn proficiency points, climb the levels, and see exactly where to push next.</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="langs">
+        <svg class="deco-mark" aria-hidden="true" focusable="false" style="width:480px;height:480px;left:50%;margin-left:-240px;top:-150px;transform:rotate(8deg);opacity:0.04;"><use href="#wp-mark"/></svg>
+        <div class="langs-inner">
+            <div class="langs-intro">
+                <span class="kicker">Any language</span>
+                <h2>Learn in the language you think in.</h2>
+                <p class="langs-lede">Type your topic in English, עברית, العربية, 日本語 — whatever you think in — and WisePath builds the entire assessment in that language. Code and math stay perfectly readable in every one, even when left-to-right notation sits inside right-to-left text.</p>
+            </div>
+
+            <div class="lang-grid">
+                <!-- English (hidden in the wide single-row view; shown in the scroll) -->
+                <div class="lang-card lang-card--extra">
+                    <div class="phone"><div class="qz">
+                        <div class="qz-status"><span>9:41</span><span class="notch"></span><span class="sig"><b></b></span></div>
+                        <div class="qz-nav"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></span><span class="topic">Swift Concurrency</span></div>
+                        <div class="qz-meta"><span>Question 1 of 8</span><span class="time">0:04</span></div>
+                        <div class="qz-prog"><i style="width:12%"></i></div>
+                        <div class="qz-q">The <code>await</code> keyword may introduce a…</div>
+                        <div class="qz-opts">
+                            <div class="qz-opt"><span class="radio"></span>syntax error</div>
+                            <div class="qz-opt sel"><span class="radio"></span>suspension point</div>
+                            <div class="qz-opt"><span class="radio"></span>memory leak</div>
+                            <div class="qz-opt"><span class="radio"></span>deadlock</div>
+                        </div>
+                        <div class="qz-foot"><span class="skip">Skip</span><span class="next">Next</span></div>
+                    </div></div>
+                    <div class="lang-cap">English</div>
+                </div>
+
+                <!-- Spanish -->
+                <div class="lang-card">
+                    <div class="phone"><div class="qz">
+                        <div class="qz-status"><span>9:41</span><span class="notch"></span><span class="sig"><b></b></span></div>
+                        <div class="qz-nav"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></span><span class="topic">Mercado de bonos</span></div>
+                        <div class="qz-meta"><span>Pregunta 2 de 8</span><span class="time">0:11</span></div>
+                        <div class="qz-prog"><i style="width:26%"></i></div>
+                        <div class="qz-q">Si los tipos de interés suben, el precio de un bono normalmente…</div>
+                        <div class="qz-opts">
+                            <div class="qz-opt"><span class="radio"></span>sube</div>
+                            <div class="qz-opt sel"><span class="radio"></span>baja</div>
+                            <div class="qz-opt"><span class="radio"></span>no cambia</div>
+                            <div class="qz-opt"><span class="radio"></span>se duplica</div>
+                        </div>
+                        <div class="qz-foot"><span class="skip">Saltar</span><span class="next">Siguiente</span></div>
+                    </div></div>
+                    <div class="lang-cap">Spanish · <span class="endo">Español</span></div>
+                </div>
+
+                <!-- French -->
+                <div class="lang-card">
+                    <div class="phone"><div class="qz">
+                        <div class="qz-status"><span>9:41</span><span class="notch"></span><span class="sig"><b></b></span></div>
+                        <div class="qz-nav"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></span><span class="topic">Révolution française</span></div>
+                        <div class="qz-meta"><span>Question 3 sur 8</span><span class="time">0:07</span></div>
+                        <div class="qz-prog"><i style="width:38%"></i></div>
+                        <div class="qz-q">La prise de la Bastille eut lieu en…</div>
+                        <div class="qz-opts">
+                            <div class="qz-opt sel"><span class="radio"></span>1789</div>
+                            <div class="qz-opt"><span class="radio"></span>1791</div>
+                            <div class="qz-opt"><span class="radio"></span>1804</div>
+                            <div class="qz-opt"><span class="radio"></span>1776</div>
+                        </div>
+                        <div class="qz-foot"><span class="skip">Passer</span><span class="next">Suivant</span></div>
+                    </div></div>
+                    <div class="lang-cap">French · <span class="endo">Français</span></div>
+                </div>
+
+                <!-- Japanese -->
+                <div class="lang-card">
+                    <div class="phone"><div class="qz" lang="ja">
+                        <div class="qz-status"><span>9:41</span><span class="notch"></span><span class="sig"><b></b></span></div>
+                        <div class="qz-nav"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></span><span class="topic">光合成</span></div>
+                        <div class="qz-meta"><span>問題 4 / 8</span><span class="time">0:09</span></div>
+                        <div class="qz-prog"><i style="width:50%"></i></div>
+                        <div class="qz-q">光合成で植物が主に取り込む気体は？</div>
+                        <div class="qz-opts">
+                            <div class="qz-opt"><span class="radio"></span>酸素</div>
+                            <div class="qz-opt sel"><span class="radio"></span>二酸化炭素</div>
+                            <div class="qz-opt"><span class="radio"></span>窒素</div>
+                            <div class="qz-opt"><span class="radio"></span>水素</div>
+                        </div>
+                        <div class="qz-foot"><span class="skip">スキップ</span><span class="next">次へ</span></div>
+                    </div></div>
+                    <div class="lang-cap">Japanese · <span class="endo">日本語</span></div>
+                </div>
+
+                <!-- Hebrew (RTL) — LTR code chip isolated inside RTL prose -->
+                <div class="lang-card">
+                    <div class="phone"><div class="qz" dir="rtl" lang="he">
+                        <div class="qz-status"><span>9:41</span><span class="notch"></span><span class="sig"><b></b></span></div>
+                        <div class="qz-nav"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></span><span class="topic">אלגוריתמים</span></div>
+                        <div class="qz-meta"><span>שאלה 5 מתוך 8</span><span class="time">0:06</span></div>
+                        <div class="qz-prog"><i style="width:62%"></i></div>
+                        <div class="qz-q">זמן הריצה של החיפוש הבינארי <code>binarySearch</code> על מערך ממוין הוא…</div>
+                        <div class="qz-opts">
+                            <div class="qz-opt"><span class="radio"></span><span class="m">O(1)</span></div>
+                            <div class="qz-opt sel"><span class="radio"></span><span class="m">O(log n)</span></div>
+                            <div class="qz-opt"><span class="radio"></span><span class="m">O(n)</span></div>
+                            <div class="qz-opt"><span class="radio"></span><span class="m">O(n²)</span></div>
+                        </div>
+                        <div class="qz-foot"><span class="skip">דלג</span><span class="next">הבא</span></div>
+                    </div></div>
+                    <div class="lang-cap">Hebrew · <span class="endo">עברית</span></div>
+                </div>
+
+                <!-- Arabic (RTL) — LTR math isolated inside RTL prose; hidden in the wide single-row view -->
+                <div class="lang-card lang-card--extra">
+                    <div class="phone"><div class="qz" dir="rtl" lang="ar">
+                        <div class="qz-status"><span>9:41</span><span class="notch"></span><span class="sig"><b></b></span></div>
+                        <div class="qz-nav"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></span><span class="topic">المعادلات الخطية</span></div>
+                        <div class="qz-meta"><span>السؤال 6 من 8</span><span class="time">0:08</span></div>
+                        <div class="qz-prog"><i style="width:74%"></i></div>
+                        <div class="qz-q">قيمة <span class="m">x</span> في المعادلة <span class="m">2x + 3 = 11</span> هي…</div>
+                        <div class="qz-opts">
+                            <div class="qz-opt"><span class="radio"></span><span class="m">3</span></div>
+                            <div class="qz-opt sel"><span class="radio"></span><span class="m">4</span></div>
+                            <div class="qz-opt"><span class="radio"></span><span class="m">5</span></div>
+                            <div class="qz-opt"><span class="radio"></span><span class="m">7</span></div>
+                        </div>
+                        <div class="qz-foot"><span class="skip">تخطّي</span><span class="next">التالي</span></div>
+                    </div></div>
+                    <div class="lang-cap">Arabic · <span class="endo">العربية</span></div>
+                </div>
+            </div>
+
+            <p class="langs-foot"><strong>One topic, every language.</strong> Each assessment is generated once and translated on demand — so the moment someone wants it in their language, it's ready.</p>
         </div>
     </div>
 
@@ -1282,7 +1696,7 @@
 
         /* ---- Reveal content as it scrolls into view ---- */
         var revealEls = document.querySelectorAll(
-            '.row .copy, .row .visual, .feature, .stat, .how .kicker, .how h2, .darkmode .phone, .trust h3, .trust p'
+            '.row .copy, .row .visual, .feature, .stat, .how .kicker, .how h2, .langs .kicker, .langs h2, .langs-lede, .lang-card, .darkmode .phone, .trust h3, .trust p'
         );
         if (!reduce && 'IntersectionObserver' in window) {
             revealEls.forEach(function (el, i) {
